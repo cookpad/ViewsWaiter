@@ -3,7 +3,7 @@ package org.cookpad.rxbroadcaster.rx_extensions
 import io.reactivex.*
 import io.reactivex.disposables.Disposable
 
-internal class MapFirst<T>(val num: Int, val mapper: (T) -> T) : ObservableOperator<T, T> {
+private class MapFirst<T>(val num: Int, val mapper: (T) -> T) : ObservableOperator<T, T> {
     var count = 0
     override fun apply(observer: Observer<in T>): Observer<in T> {
         return object : Observer<T> {
@@ -28,7 +28,6 @@ internal class MapFirst<T>(val num: Int, val mapper: (T) -> T) : ObservableOpera
             override fun onError(e: Throwable) {
                 observer.onError(e)
             }
-
         }
     }
 }

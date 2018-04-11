@@ -4,15 +4,14 @@ internal class RxBroadcasterBuffer<T>(private val bufferSize: Int) {
     private var buffer = mutableListOf<RxBroadcasterMessage<T>>()
 
     fun add(message: RxBroadcasterMessage<T>) {
+        // store only the latest object emitted for a specific key
         buffer.removeAll { it.key == message.key }
         buffer.add(0, message)
-        if (buffer.size > bufferSize) {
-            buffer = buffer.subList(0, bufferSize)
-        }
+
+        // keep only the last N elements from buffer to avoid it growing endlessly
+        buffer = buffer.take(bufferSize).toMutableList()
     }
 
     fun get(filter: String): RxBroadcasterMessage<T>? = buffer.find { it.key == filter }
-    // fun get(ids: List<String>): List<RxBroadcasterMessage<T>>? = buffer.filter { ids.contains(it.key) }
-
     fun all() = buffer.toList()
 }

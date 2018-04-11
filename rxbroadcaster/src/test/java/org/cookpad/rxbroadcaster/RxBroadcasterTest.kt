@@ -120,7 +120,7 @@ class RxBroadcasterTest {
                 .assertNoErrors()
                 .assertValueCount(1)
                 .assertValue {
-                    it.size == 3
+                    it.size == 3 && it.first() == item1 && it[1] == item2 && it[2] == item3
                 }
     }
 }
