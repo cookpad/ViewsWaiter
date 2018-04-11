@@ -114,9 +114,9 @@ recipeLikePipeline.all().subscribe { recipeList ->
 }
 ```
 
-#### Kotlin data classes
+#### Inmutability
 
-We strongly advise you to only emmit immutable Kotlin data classes, 
+We strongly advise you to only emmit immutable models (as Kotlin data classes), 
 that way you'll prevent accidentally modifying one item from the history 
 causing unexpected behavior, and you'll be sure that the latest emitted 
 event within a filter is the most updated.
