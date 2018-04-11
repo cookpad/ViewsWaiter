@@ -16,11 +16,11 @@ class RxBroadcasterTest {
     fun listenAfterSubscribeUpdateItem() {
         val itemsList = mutableListOf(item1)
 
-        sampleItemPipeline.listen().subscribe { item ->
+        sampleItemPipeline.observe().subscribe { item ->
             itemsList.find { it.name == item.name }?.description = item.description
         }
 
-        sampleItemPipeline.emit(item1.copy(description = "changed"))
+        sampleItemPipeline.onNext(item1.copy(description = "changed"))
         assertThat(itemsList).hasSize(1)
         assertThat(itemsList[0].description).isEqualTo("changed")
     }
@@ -29,12 +29,12 @@ class RxBroadcasterTest {
     fun listenAfterDisposeDoNothing() {
         val itemsList = mutableListOf(item1)
 
-        val itemsListUpdateDisposable = sampleItemPipeline.listen().subscribe { item ->
+        val itemsListUpdateDisposable = sampleItemPipeline.observe().subscribe { item ->
             itemsList.find { it.name == item.name }?.description = item.description
         }
         itemsListUpdateDisposable.dispose()
 
-        sampleItemPipeline.emit(item1.copy(description = "changed"))
+        sampleItemPipeline.onNext(item1.copy(description = "changed"))
         assertThat(itemsList).hasSize(1)
         assertThat(itemsList[0].description).isEqualTo("not changed")
     }
@@ -44,13 +44,13 @@ class RxBroadcasterTest {
         val itemsList = mutableListOf(item1, item2, item3)
 
         val itemType = "2"
-        sampleItemPipeline.filter(itemType).listen().subscribe { item ->
+        sampleItemPipeline.filter(itemType).observe().subscribe { item ->
             itemsList.find { it.name == item.name }?.description = item.description
         }
 
-        sampleItemPipeline.filter(item1.type).emit(item1.copy(description = "changed"))
-        sampleItemPipeline.filter(item2.type).emit(item2.copy(description = "changed"))
-        sampleItemPipeline.filter(item3.type).emit(item3.copy(description = "changed"))
+        sampleItemPipeline.filter(item1.type).onNext(item1.copy(description = "changed"))
+        sampleItemPipeline.filter(item2.type).onNext(item2.copy(description = "changed"))
+        sampleItemPipeline.filter(item3.type).onNext(item3.copy(description = "changed"))
 
         assertThat(itemsList).hasSize(3)
         assertThat(itemsList[0].description).isEqualTo("not changed")
@@ -60,12 +60,12 @@ class RxBroadcasterTest {
 
     @Test
     fun checkOnlyFilteredEventsCalled() {
-        val sampleItemPipelineObservable = sampleItemPipeline.filter("filter").listen().test()
+        val sampleItemPipelineObservable = sampleItemPipeline.filter("filter").observe().test()
 
-        sampleItemPipeline.filter("not filter").emit(item1)
-        sampleItemPipeline.filter("filter").emit(item2)
-        sampleItemPipeline.filter("not filter").emit(item3)
-        sampleItemPipeline.filter("not filter").emit(item1)
+        sampleItemPipeline.filter("not filter").onNext(item1)
+        sampleItemPipeline.filter("filter").onNext(item2)
+        sampleItemPipeline.filter("not filter").onNext(item3)
+        sampleItemPipeline.filter("not filter").onNext(item1)
 
         sampleItemPipelineObservable
                 .assertNoErrors()
@@ -77,11 +77,11 @@ class RxBroadcasterTest {
 
     @Test
     fun checkGetLastEventAfterSubscribe() {
-        sampleItemPipeline.emit(item3)
-        sampleItemPipeline.emit(item2)
-        sampleItemPipeline.emit(item1)
+        sampleItemPipeline.onNext(item3)
+        sampleItemPipeline.onNext(item2)
+        sampleItemPipeline.onNext(item1)
 
-        val sampleItemPipelineObservable = sampleItemPipeline.listen(getLast = true).test()
+        val sampleItemPipelineObservable = sampleItemPipeline.observe(getLast = true).test()
 
         sampleItemPipelineObservable
                 .assertNoErrors()
@@ -93,18 +93,34 @@ class RxBroadcasterTest {
 
     @Test
     fun checkGetFilteredLastEventAfterSubscribe() {
-        sampleItemPipeline.filter("not filter").emit(item3)
-        sampleItemPipeline.filter("filter").emit(item2)
-        sampleItemPipeline.filter("not filter").emit(item1)
-        sampleItemPipeline.filter("not filter").emit(item1)
+        sampleItemPipeline.filter("not filter").onNext(item3)
+        sampleItemPipeline.filter("filter").onNext(item2)
+        sampleItemPipeline.filter("not filter").onNext(item1)
+        sampleItemPipeline.filter("not filter").onNext(item1)
 
-        val sampleItemPipelineObservable = sampleItemPipeline.filter("filter").listen(getLast = true).test()
+        val sampleItemPipelineObservable = sampleItemPipeline.filter("filter").observe(getLast = true).test()
 
         sampleItemPipelineObservable
                 .assertNoErrors()
                 .assertValueCount(1)
                 .assertValue {
                     it == item2
+                }
+    }
+
+    @Test
+    fun getAllEmittedEvents() {
+        sampleItemPipeline.onNext(item3)
+        sampleItemPipeline.onNext(item2)
+        sampleItemPipeline.onNext(item1)
+
+        val sampleItemPipelineObservable = sampleItemPipeline.all().test()
+
+        sampleItemPipelineObservable
+                .assertNoErrors()
+                .assertValueCount(1)
+                .assertValue {
+                    it.size == 3
                 }
     }
 }

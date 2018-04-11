@@ -3,24 +3,32 @@ package org.cookpad.rxbroadcaster
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import org.cookpad.rxbroadcaster.rx_extensions.mapFirst
 
-class RxBroadcaster<T : Any>(bufferSize: Int = 100) {
+class RxBroadcaster<T : Any>(bufferSize: Int = 300) {
     private val buffer = RxBroadcasterBuffer<T>(bufferSize)
     private val simpleSubject = PublishSubject.create<RxBroadcasterMessage<T>>()
     private val multipleSubject = BehaviorSubject.create<RxBroadcasterMessage<T>>()
     private val simpleObservable = simpleSubject.hide()
     private val multipleObservable = multipleSubject.hide()
 
-    fun listen(getLast: Boolean = false): Observable<T> = getObservable(getLast).map { it.value }
+    fun observe(getLast: Boolean = false): Observable<T> = getObservable(getLast).map { it.value }
 
-    fun listen(filter: String, getLast: Boolean = false): Observable<T> = getObservable(getLast)
+    fun observe(filter: String, getLast: Boolean = false): Observable<T> = getObservable(getLast)
+            .mapFirst {
+                if (getLast && buffer.get(filter) != null) {
+                    buffer.get(filter)
+                } else {
+                    it
+                }
+            }
             .filter { it.key == filter }
             .map { it.value }
 
-    fun getAll(): List<T> = buffer.all().map { it.value }
+    fun all(): Observable<List<T>> = Observable.just(buffer.all().map { it.value })
 
-    fun emit(value: T, filter: String? = null) {
-        RxBroadcasterMessage(filter ?: "", value).let {
+    fun onNext(value: T, filter: String? = null) {
+        RxBroadcasterMessage(filter ?: value.hashCode().toString(), value).let {
             buffer.add(it)
             simpleSubject.onNext(it)
             multipleSubject.onNext(it)
@@ -28,14 +36,14 @@ class RxBroadcaster<T : Any>(bufferSize: Int = 100) {
     }
 
     fun filter(filter: String) = object : RxFilteredBroadcaster<T> {
-        override fun listen(getLast: Boolean) = this@RxBroadcaster.listen(filter, getLast)
-        override fun emit(value: T) = this@RxBroadcaster.emit(value, filter)
+        override fun observe(getLast: Boolean) = this@RxBroadcaster.observe(filter, getLast)
+        override fun onNext(value: T) = this@RxBroadcaster.onNext(value, filter)
     }
 
     private fun getObservable(getLast: Boolean) = if (getLast) multipleObservable else simpleObservable
 
     interface RxFilteredBroadcaster<T> {
-        fun emit(value: T)
-        fun listen(getLast: Boolean = false): Observable<T>
+        fun onNext(value: T)
+        fun observe(getLast: Boolean = false): Observable<T>
     }
 }

@@ -22,19 +22,19 @@ the interaction:
 
 
 ### Use cases
-For lists views, you should listen to an unfiltered pipeline and then 
+For lists views, you should observe to an unfiltered pipeline and then 
 update the specific item from the list (and manually update your view after if required)
 ```
-recipeLikePipeline.listen().subscribe { likedItem ->
+recipeLikePipeline.observe().subscribe { likedItem ->
     itemList.find{ it.id == likedItem.id}.like()
     // update recyclerview
 }
 ```
 
-For single items (detail views) you can listen with a specific filter, 
-that way, you'll only listen for events targeted for that specific item
+For single items (detail views) you can observe with a specific filter, 
+that way, you'll only observe for events targeted for that specific item
 ```
-recipeLikePipeline.filter(item.id).listen().subscribe {
+recipeLikePipeline.filter(item.id).observe().subscribe {
     item.like()
     // update view
 }
@@ -42,9 +42,9 @@ recipeLikePipeline.filter(item.id).listen().subscribe {
 
 When emmiting events, the best is to be as specific as possible 
 by always adding a filter, that way both lists or detail views will be 
-able to listen and uopdate itelfs
+able to observe and uopdate itelfs
 ```
-recipeLikePipeline.filter(item.id).emit(item)
+recipeLikePipeline.filter(item.id).onNext(item)
 ```
 
 The Android lifecycle is unpredictable, and sometimes the system might 
@@ -54,7 +54,7 @@ recreated from the stack it might not be updated.
 In those cases, you might want to setup the `getLast` parameter to `true` when 
 creating the listener
 ```
-recipeLikePipeline.filter(item.id).listen(getLast = true).subscribe {
+recipeLikePipeline.filter(item.id).observe(getLast = true).subscribe {
     // do something
 }
 ```
@@ -67,7 +67,7 @@ So for example take that you do the following from a list:
 - Like recipe D
 
 Then you go back in the stack to the detail of recipe C, 
-that was killed by the system, and listen for events filtered with the recipe ID.
+that was killed by the system, and observe for events filtered with the recipe ID.
 
 Even though event for recipes C and D have been emitted since the last 
 event for recipe B, right after subscribing the observable will receive 
@@ -76,7 +76,7 @@ the latest event for recipe B so you can update your view.
 What about lists?
 If you do
 ```
-recipeLikePipeline.listen(getLast = true).subscribe {
+recipeLikePipeline.observe(getLast = true).subscribe {
     // do something
 }
 ```

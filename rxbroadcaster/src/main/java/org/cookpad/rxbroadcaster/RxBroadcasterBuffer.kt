@@ -11,7 +11,7 @@ internal class RxBroadcasterBuffer<T>(private val bufferSize: Int) {
         }
     }
 
-    fun get(id: String): RxBroadcasterMessage<T>? = buffer.find { it.key == id }
+    fun get(filter: String): RxBroadcasterMessage<T>? = buffer.find { it.key == filter }
     // fun get(ids: List<String>): List<RxBroadcasterMessage<T>>? = buffer.filter { ids.contains(it.key) }
 
     fun all() = buffer.toList()
