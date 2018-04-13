@@ -28,37 +28,37 @@ val likeThirdRecipePipeline = RxBroadcaster<Recipe>()
 
 ## Use cases
 ### Observe in List Views
-For lists views, you should observe in an unfiltered pipeline and then 
+For lists views, you should stream in an unfiltered pipeline and then 
 update the specific item from the list (and manually update your view after if required)
 ```kotlin
-likeRecipePipeline.observe().subscribe { likedItem ->
+likeRecipePipeline.stream().subscribe { likedItem ->
     itemList.find{ it.id == likedItem.id}.like()
     // update recyclerview
 }
 ```
 
 ### Observe in Detail Views
-For single items (detail views) you can observe with a filter, 
+For single items (detail views) you can stream with a filter, 
 that way, you'll only subscribe to events targeted for that specific item
 ```kotlin
-recipeLikePipeline.filter(item.id).observe().subscribe {
+recipeLikePipeline.filter(item.id).stream().subscribe {
     item.like()
     // update view
 }
 
 // alternativerly you can do
-// recipeLikePipeline.observe(filter=item.id)
+// recipeLikePipeline.stream(filter=item.id)
 ```
 
 ### Emitting
 When emitting events, the best thing is to be as specific as possible 
 by always adding a filter, that way both lists or detail views will be 
-able to observe and uopdate itelfs
+able to stream and uopdate itelfs
 ```kotlin
-recipeLikePipeline.filter(item.id).onNext(item)
+recipeLikePipeline.filter(item.id).emit(item)
 
 // alternativerly you can do
-// recipeLikePipeline.onNext(item, filter="item.id")
+// recipeLikePipeline.emit(item, filter="item.id")
 ```
 
 ### Getting events emitted before subscribing
@@ -70,12 +70,12 @@ not be updated.
 In those cases, you might want to setup the `getLast` parameter to `true` when 
 creating the listener
 ```kotlin
-recipeLikePipeline.filter(item.id).observe(getLast = true).subscribe {
+recipeLikePipeline.filter(item.id).stream(getLast = true).subscribe {
     // do something
 }
 
 // alternativerly you can do
-// recipeLikePipeline.observe(filter=item.id, getLast = true)
+// recipeLikePipeline.stream(filter=item.id, getLast = true)
 ```
 this way you'll always get the latest event emitted in that pipeline 
 with that filter
