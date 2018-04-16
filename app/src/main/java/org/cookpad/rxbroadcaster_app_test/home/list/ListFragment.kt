@@ -9,23 +9,33 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_list.*
 import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import org.cookpad.rxbroadcaster_app_test.R
-import org.cookpad.rxbroadcaster_app_test.home.RecipeAdapter
+import org.cookpad.rxbroadcaster_app_test.data.RecipeRepository
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
+import org.cookpad.rxbroadcaster_app_test.detail.RecipeActivity
+import org.cookpad.rxbroadcaster_app_test.home.RecipeAdapter
 
 class ListFragment : Fragment() {
+    private val adapter by lazy {
+        object : OkRecyclerViewAdapter<Recipe, RecipeAdapter>() {
+            override fun onCreateItemView(parent: ViewGroup, viewType: Int) = RecipeAdapter(parent.context)
+        }.apply {
+            setOnItemClickListener { item, _, _ -> activity?.let { RecipeActivity.startRecipeActivity(it, item.id) } }
+        }
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_list, container, false) as ViewGroup
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupRecyclerView()
+    }
 
+    private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = object : OkRecyclerViewAdapter<Recipe, RecipeAdapter>() {
-            override fun onCreateItemView(parent: ViewGroup, viewType: Int) = RecipeAdapter(parent.context)
-        }
         recyclerView.adapter = adapter
-
-        adapter.add(Recipe("123", "Chicken", "A very good chicken", false, false))
+        adapter.addAll(RecipeRepository().getAll())
     }
 }
