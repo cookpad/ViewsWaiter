@@ -10,7 +10,7 @@ import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.detail.RecipeActivity
-import org.cookpad.rxbroadcaster_app_test.home.RecipeAdapter
+import org.cookpad.rxbroadcaster_app_test.home.adapters.RecipeAdapter
 
 class BookmarksFragment : Fragment(), BookmarksPresenter.View {
     private val adapter by lazy {

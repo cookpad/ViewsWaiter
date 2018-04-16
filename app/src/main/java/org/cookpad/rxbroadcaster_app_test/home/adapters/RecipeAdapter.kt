@@ -1,13 +1,12 @@
-package org.cookpad.rxbroadcaster_app_test.home
+package org.cookpad.rxbroadcaster_app_test.home.adapters
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
-import android.widget.RelativeLayout
-import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.list_item_recipe.view.*
+import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 
