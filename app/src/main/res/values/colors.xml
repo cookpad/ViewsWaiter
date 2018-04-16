@@ -6,4 +6,5 @@
 
     <color name="backgroundColor">#FCF8E3</color>
     <color name="textColor">#484432</color>
+    <color name="likedColor">#F4444B</color>
 </resources>
