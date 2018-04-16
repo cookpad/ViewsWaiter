@@ -1,5 +1,6 @@
 package org.cookpad.rxbroadcaster_app_test.data
 
+import io.reactivex.Single
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 
 private val recipes = mutableListOf(
@@ -9,11 +10,11 @@ private val recipes = mutableListOf(
 
 class RecipeRepository {
 
-    fun getAll() = recipes.toList()
+    fun getAll() = recipes.toList().let { Single.just(it) }
 
-    fun getBookmarks() = recipes.filter { it.bookmarked }
+    fun getBookmarks() = recipes.filter { it.bookmarked }.let { Single.just(it) }
 
-    fun get(id: String) = recipes.first { it.id == id }
+    fun get(id: String) = recipes.first { it.id == id }.let { Single.just(it) }
 
     fun updateRecipe(recipe: Recipe) {
         val index = recipes.indexOfFirst { it.id == recipe.id }
