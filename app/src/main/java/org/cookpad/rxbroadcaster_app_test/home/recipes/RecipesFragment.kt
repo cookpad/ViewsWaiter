@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_recipes.*
-import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.detail.RecipeActivity
@@ -14,11 +13,8 @@ import org.cookpad.rxbroadcaster_app_test.home.adapters.RecipeAdapter
 
 class RecipesFragment : Fragment(), RecipesPresenter.View {
     private val adapter by lazy {
-        object : OkRecyclerViewAdapter<Recipe, RecipeAdapter>() {
-            override fun onCreateItemView(parent: ViewGroup, viewType: Int) = RecipeAdapter(parent.context)
-        }.apply {
-            setOnItemClickListener { item, _, _ -> activity?.let { RecipeActivity.startRecipeActivity(it, item.id) } }
-        }
+        val detailClicks: (Recipe) -> Unit = { recipe -> activity?.let { RecipeActivity.startRecipeActivity(it, recipe.id) } }
+        RecipeAdapter(detailClicks)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -36,6 +32,6 @@ class RecipesFragment : Fragment(), RecipesPresenter.View {
     }
 
     override fun showRecipes(recipes: List<Recipe>) {
-        adapter.all = recipes
+        adapter.setAll(recipes)
     }
 }
