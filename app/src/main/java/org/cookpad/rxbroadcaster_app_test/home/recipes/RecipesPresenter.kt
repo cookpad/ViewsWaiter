@@ -1,4 +1,4 @@
-package org.cookpad.rxbroadcaster_app_test.detail
+package org.cookpad.rxbroadcaster_app_test.home.recipes
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
@@ -7,14 +7,14 @@ import io.reactivex.disposables.CompositeDisposable
 import org.cookpad.rxbroadcaster_app_test.data.RecipeRepository
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 
-class RecipePresenter(private val view: View,
-                      private val repository: RecipeRepository = RecipeRepository()) : LifecycleObserver {
+class RecipesPresenter(private val view: View,
+                       private val repository: RecipeRepository = RecipeRepository()) : LifecycleObserver {
     private val disposables = CompositeDisposable()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         view.apply {
-            showRecipe(repository.get(recipeId))
+            showRecipes(repository.getAll())
         }
     }
 
@@ -24,7 +24,6 @@ class RecipePresenter(private val view: View,
     }
 
     interface View {
-        val recipeId: String
-        fun showRecipe(recipe: Recipe)
+        fun showRecipes(recipes: List<Recipe>)
     }
 }

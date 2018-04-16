@@ -8,7 +8,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_recipe_list.*
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.home.bookmarks.BookmarksFragment
-import org.cookpad.rxbroadcaster_app_test.home.list.ListFragment
+import org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment
 
 class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
     val onShowListSubject = PublishSubject.create<Unit>()
@@ -28,7 +28,7 @@ class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
         viewPager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
                 return when (position) {
-                    0 -> ListFragment()
+                    0 -> RecipesFragment()
                     1 -> BookmarksFragment()
                     else -> BookmarksFragment()
                 }

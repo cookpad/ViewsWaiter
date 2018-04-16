@@ -14,7 +14,7 @@ class RecipeActivity : AppCompatActivity(), RecipePresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
-        
+
         lifecycle.addObserver(RecipePresenter(this))
     }
 
