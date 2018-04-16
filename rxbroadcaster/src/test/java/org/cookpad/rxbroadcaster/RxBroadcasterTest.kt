@@ -1,126 +1,73 @@
 package org.cookpad.rxbroadcaster
 
-import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class RxBroadcasterTest {
-    data class SampleItem(val name: String, var description: String, val type: String)
-
-    private val sampleItemPipeline = RxBroadcaster<SampleItem>()
-
-    private val item1 = SampleItem("1", "not changed", "1")
-    private val item2 = SampleItem("2", "not changed", "1")
-    private val item3 = SampleItem("3", "not changed", "2")
 
     @Test
-    fun listenAfterSubscribeUpdateItem() {
-        val itemsList = mutableListOf(item1)
+    fun verifyConsumerNoChannelAndProducerNoChannel() {
+        val pipeline = RxBroadcaster<String>()
+        val testObserver = pipeline.stream().test()
 
-        sampleItemPipeline.stream().subscribe { item ->
-            itemsList.find { it.name == item.name }?.description = item.description
+        pipeline.apply {
+            emit("1")
+            emit("2")
+            emit("3")
         }
 
-        sampleItemPipeline.emit(item1.copy(description = "changed"))
-        assertThat(itemsList).hasSize(1)
-        assertThat(itemsList[0].description).isEqualTo("changed")
+        testObserver
+                .assertValueCount(3)
+                .assertNoErrors()
+                .assertValues("1", "2", "3")
     }
 
     @Test
-    fun listenAfterDisposeDoNothing() {
-        val itemsList = mutableListOf(item1)
+    fun verifyConsumerNoChannelAndProducerChannel() {
+        val pipeline = RxBroadcaster<String>()
+        val testObserver = pipeline.stream().test()
 
-        val itemsListUpdateDisposable = sampleItemPipeline.stream().subscribe { item ->
-            itemsList.find { it.name == item.name }?.description = item.description
-        }
-        itemsListUpdateDisposable.dispose()
-
-        sampleItemPipeline.emit(item1.copy(description = "changed"))
-        assertThat(itemsList).hasSize(1)
-        assertThat(itemsList[0].description).isEqualTo("not changed")
-    }
-
-    @Test
-    fun listenAfterSubscribeWithFilterUpdateItem() {
-        val itemsList = mutableListOf(item1, item2, item3)
-
-        val itemType = "2"
-        sampleItemPipeline.channel(itemType).stream().subscribe { item ->
-            itemsList.find { it.name == item.name }?.description = item.description
+        pipeline.apply {
+            channel("1").emit("1")
+            channel("2").emit("2")
+            channel("3").emit("3")
         }
 
-        sampleItemPipeline.channel(item1.type).emit(item1.copy(description = "changed"))
-        sampleItemPipeline.channel(item2.type).emit(item2.copy(description = "changed"))
-        sampleItemPipeline.channel(item3.type).emit(item3.copy(description = "changed"))
-
-        assertThat(itemsList).hasSize(3)
-        assertThat(itemsList[0].description).isEqualTo("not changed")
-        assertThat(itemsList[1].description).isEqualTo("not changed")
-        assertThat(itemsList[2].description).isEqualTo("changed")
+        testObserver
+                .assertValueCount(3)
+                .assertNoErrors()
+                .assertValues("1", "2", "3")
     }
 
     @Test
-    fun checkOnlyFilteredEventsCalled() {
-        val sampleItemPipelineObservable = sampleItemPipeline.channel("channel").stream().test()
+    fun verifyConsumerChannelAndProducerNoChannel() {
+        val pipeline = RxBroadcaster<String>()
+        val testObserver = pipeline.channel("1").stream().test()
 
-        sampleItemPipeline.channel("not channel").emit(item1)
-        sampleItemPipeline.channel("channel").emit(item2)
-        sampleItemPipeline.channel("not channel").emit(item3)
-        sampleItemPipeline.channel("not channel").emit(item1)
+        pipeline.apply {
+            emit("1")
+            emit("2")
+            emit("3")
+        }
 
-        sampleItemPipelineObservable
+        testObserver
                 .assertNoErrors()
-                .assertValueCount(1)
-                .assertValue {
-                    it == item2
-                }
+                .assertNoValues()
     }
 
     @Test
-    fun checkGetLastEventAfterSubscribe() {
-        sampleItemPipeline.emit(item3)
-        sampleItemPipeline.emit(item2)
-        sampleItemPipeline.emit(item1)
+    fun verifyConsumerChannelAndProducerChannel() {
+        val pipeline = RxBroadcaster<String>()
 
-        val sampleItemPipelineObservable = sampleItemPipeline.stream(getLast = true).test()
+        val channel1 = pipeline.channel("1")
+        val testObserver = channel1.stream().test()
 
-        sampleItemPipelineObservable
+        channel1.emit("1")
+        pipeline.channel("2").emit("2")
+        pipeline.channel("3").emit("3")
+
+        testObserver
                 .assertNoErrors()
                 .assertValueCount(1)
-                .assertValue {
-                    it == item1
-                }
-    }
-
-    @Test
-    fun checkGetFilteredLastEventAfterSubscribe() {
-        sampleItemPipeline.channel("not channel").emit(item3)
-        sampleItemPipeline.channel("channel").emit(item2)
-        sampleItemPipeline.channel("not channel").emit(item1)
-        sampleItemPipeline.channel("not channel").emit(item1)
-
-        val sampleItemPipelineObservable = sampleItemPipeline.channel("channel").stream(getLast = true).test()
-
-        sampleItemPipelineObservable
-                .assertNoErrors()
-                .assertValueCount(1)
-                .assertValue {
-                    it == item2
-                }
-    }
-
-    @Test
-    fun getAllEmittedEvents() {
-        sampleItemPipeline.emit(item3)
-        sampleItemPipeline.emit(item2)
-        sampleItemPipeline.emit(item1)
-
-        val sampleItemPipelineObservable = sampleItemPipeline.all().test()
-
-        sampleItemPipelineObservable
-                .assertNoErrors()
-                .assertValueCount(1)
-                .assertValue {
-                    it.size == 3 && it.first() == item1 && it[1] == item2 && it[2] == item3
-                }
+                .assertValues("1")
     }
 }
