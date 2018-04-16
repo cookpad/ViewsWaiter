@@ -4,7 +4,11 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 27
 
-
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 
     defaultConfig {
         minSdkVersion 16
@@ -27,6 +31,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    kaptAndroidTest "android.arch.lifecycle:compiler:1.1.1"
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -34,9 +40,13 @@ dependencies {
     implementation "com.google.truth:truth:0.39"
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    testImplementation 'com.google.truth:truth:0.39'
+    testImplementation "org.robolectric:robolectric:3.5.1"
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
 repositories {
     mavenCentral()
 }
