@@ -5,11 +5,11 @@ import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
 import android.widget.RelativeLayout
 import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
-import org.cookpad.rxbroadcaster_app_test.models.Recipe
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_recipe.view.*
 import org.cookpad.rxbroadcaster_app_test.R
+import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 
 
 class RecipeAdapter(context: Context) : RelativeLayout(context), OkRecyclerViewAdapter.Binder<Recipe> {

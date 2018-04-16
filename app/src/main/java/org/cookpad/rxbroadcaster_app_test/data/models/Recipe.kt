@@ -1,4 +1,4 @@
-package org.cookpad.rxbroadcaster_app_test.models
+package org.cookpad.rxbroadcaster_app_test.data.models
 
 data class Recipe(
         val id: String,

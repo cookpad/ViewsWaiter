@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.home.RecipeAdapter
-import org.cookpad.rxbroadcaster_app_test.models.Recipe
+import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 
 class ListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
