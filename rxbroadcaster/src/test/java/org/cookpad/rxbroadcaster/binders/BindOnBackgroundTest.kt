@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.cookpad.rxbroadcaster.BuildConfig
 import org.cookpad.rxbroadcaster.R
 import org.cookpad.rxbroadcaster.RxBroadcaster
+import org.cookpad.rxbroadcaster.bindOnBackground
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -18,7 +19,7 @@ import org.robolectric.annotation.Config
 class BindOnBackgroundTest {
 
     @Test
-    fun verifyResume() {
+    fun verifyLifeCycle() {
         val controller = Robolectric.buildActivity(ActivityTest::class.java).create()
         val activityTest = controller.get()
 

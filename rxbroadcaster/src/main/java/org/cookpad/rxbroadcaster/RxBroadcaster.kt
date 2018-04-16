@@ -1,7 +1,10 @@
 package org.cookpad.rxbroadcaster
 
+import android.arch.lifecycle.Lifecycle
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import org.cookpad.rxbroadcaster.internal.OnBackgroundBinderTransformer
+import org.cookpad.rxbroadcaster.internal.RxBroadcasterMessage
 
 class RxBroadcaster<T : Any> {
     private val defaultChannelName = ""
@@ -10,13 +13,13 @@ class RxBroadcaster<T : Any> {
 
     fun stream(): Observable<T> = observable.map { it.value }
 
-    private fun stream(channel: String): Observable<T> = observable
-            .filter { it.key == channel }
-            .map { it.value }
-
     fun emit(value: T) {
         subject.onNext(RxBroadcasterMessage(defaultChannelName, value))
     }
+
+    private fun stream(channel: String): Observable<T> = observable
+            .filter { it.key == channel }
+            .map { it.value }
 
     private fun emit(value: T, channel: String = defaultChannelName) {
         subject.onNext(RxBroadcasterMessage(channel, value))
@@ -26,9 +29,6 @@ class RxBroadcaster<T : Any> {
         override fun stream() = this@RxBroadcaster.stream(name)
         override fun emit(value: T) = this@RxBroadcaster.emit(value, name)
     }
-
-    interface RxChannel<T> {
-        fun emit(value: T)
-        fun stream(): Observable<T>
-    }
 }
+
+fun <T> Observable<T>.bindOnBackground(lifecycle: Lifecycle) = this.compose(OnBackgroundBinderTransformer(lifecycle))

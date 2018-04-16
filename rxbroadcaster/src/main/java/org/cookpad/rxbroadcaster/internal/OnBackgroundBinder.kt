@@ -1,4 +1,4 @@
-package org.cookpad.rxbroadcaster.binders
+package org.cookpad.rxbroadcaster.internal
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
@@ -37,4 +37,3 @@ internal class OnBackgroundBinderTransformer<T>(lifecycle: Lifecycle) : Observab
             .also { stream -> dispose = stream.connect() }
 }
 
-fun <T> Observable<T>.bindOnBackground(lifecycle: Lifecycle) = this.compose(OnBackgroundBinderTransformer(lifecycle))
