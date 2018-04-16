@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">app_test</string>
+    <string name="app_name">RxBroadcaster</string>
+    <string name="list">List</string>
+    <string name="bookmarks">Bookmarks</string>
 </resources>
