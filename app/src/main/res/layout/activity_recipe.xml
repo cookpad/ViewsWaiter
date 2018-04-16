@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -11,5 +12,17 @@
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/colorAccent"
         android:textSize="20sp"
-        tools:text="Title" />
-</FrameLayout>
+        tools:text="Some title recipe" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/more_recipes" />
+
+    <fragment
+        android:id="@+id/fragmentRecipes"
+        android:name="org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

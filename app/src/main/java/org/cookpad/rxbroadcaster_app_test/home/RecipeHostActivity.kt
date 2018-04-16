@@ -1,9 +1,11 @@
 package org.cookpad.rxbroadcaster_app_test.home
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v7.app.AppCompatActivity
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_recipe_list.*
 import org.cookpad.rxbroadcaster_app_test.R
@@ -52,5 +54,11 @@ class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
 
     override fun showBookmarks() {
         viewPager.currentItem = 1
+    }
+
+    companion object {
+        fun startRecipeHostActivity(context: Context) {
+            context.startActivity(Intent(context, RecipeHostActivity::class.java))
+        }
     }
 }
