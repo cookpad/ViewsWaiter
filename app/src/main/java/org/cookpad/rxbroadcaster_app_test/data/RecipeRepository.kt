@@ -17,15 +17,8 @@ class RecipeRepository {
 
     fun get(id: String) = recipes.first { it.id == id }.let { Single.just(it) }
 
-    fun toggleLike(recipe: Recipe) = Completable.fromAction {
+    fun updateRecipe(recipe: Recipe) = Completable.fromAction {
         val index = recipes.indexOfFirst { it.id == recipe.id }
-        val updatedRecipe = recipe.copy(liked = !recipe.liked)
-        recipes[index] = updatedRecipe
-    }
-
-    fun toggleBookmark(recipe: Recipe) = Completable.fromAction {
-        val index = recipes.indexOfFirst { it.id == recipe.id }
-        val updatedRecipe = recipe.copy(bookmarked = !recipe.bookmarked)
-        recipes[index] = updatedRecipe
+        recipes[index] = recipe
     }
 }
