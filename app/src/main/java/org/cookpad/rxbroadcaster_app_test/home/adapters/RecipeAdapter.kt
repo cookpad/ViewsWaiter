@@ -1,9 +1,11 @@
 package org.cookpad.rxbroadcaster_app_test.home.adapters
 
+import android.media.Image
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.list_item_recipe.view.*
 import org.cookpad.rxbroadcaster_app_test.R
@@ -23,30 +25,52 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {
-            val recipe = recipes[position]
+            var recipe = recipes[position]
 
             tvTitle.text = recipe.name
             tvDescription.text = recipe.description
 
             ivBookmarkButton.apply {
-                val drawableBookmark = if (recipe.bookmarked) R.drawable.ic_bookmarked else R.drawable.ic_bookmark
-                setImageResource(drawableBookmark)
-                setOnClickListener { bookmarkClicks.onNext(recipe) }
+                setBookmarked(this, recipe.bookmarked)
+                setOnClickListener {
+                    recipe = recipe.copy(bookmarked = !recipe.bookmarked)
+                    setBookmarked(this, recipe.bookmarked)
+                    bookmarkClicks.onNext(recipe)
+                }
             }
 
             ivLikeButton.apply {
-                val (drawable, colorFilter) = if (recipe.liked) {
-                    R.drawable.ic_liked to ContextCompat.getColor(context, R.color.likedColor)
-                } else {
-                    R.drawable.ic_like to ContextCompat.getColor(context, R.color.textColor)
+                setLiked(this, recipe.liked)
+                setOnClickListener {
+                    recipe = recipe.copy(liked = !recipe.liked)
+                    setLiked(this, recipe.liked)
+                    likeClicks.onNext(recipe)
                 }
-
-                setImageResource(drawable)
-                setColorFilter(colorFilter)
-                setOnClickListener { likeClicks.onNext(recipe) }
             }
 
+
+
             rlRoot.setOnClickListener { detailClicks.onNext(recipe) }
+        }
+    }
+
+    private fun setBookmarked(ivBookmarkButton: ImageView, bookmarked: Boolean) {
+        ivBookmarkButton.apply {
+            val drawableBookmark = if (bookmarked) R.drawable.ic_bookmarked else R.drawable.ic_bookmark
+            setImageResource(drawableBookmark)
+        }
+    }
+
+    private fun setLiked(ivLikeButton: ImageView, liked: Boolean) {
+        ivLikeButton.apply {
+            val (drawable, colorFilter) = if (liked) {
+                R.drawable.ic_liked to ContextCompat.getColor(context, R.color.likedColor)
+            } else {
+                R.drawable.ic_like to ContextCompat.getColor(context, R.color.textColor)
+            }
+
+            setImageResource(drawable)
+            setColorFilter(colorFilter)
         }
     }
 
