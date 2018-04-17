@@ -1,6 +1,5 @@
 package org.cookpad.rxbroadcaster_app_test.home.adapters
 
-import android.media.Image
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -45,6 +44,8 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
             }
 
             rlRoot.setOnClickListener { detailClicks.onNext(recipe) }
+
+            ivRecipeImage.setImageResource(recipe.imageRes)
         }
     }
 

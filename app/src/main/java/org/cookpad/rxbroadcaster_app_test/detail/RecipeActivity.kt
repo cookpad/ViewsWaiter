@@ -45,6 +45,7 @@ class RecipeActivity : AppCompatActivity(), RecipePresenter.View {
         recipe.apply {
             tvTitle.text = name
             tvDescription.text = description
+            ivRecipeImage.setImageResource(imageRes)
         }
     }
 
