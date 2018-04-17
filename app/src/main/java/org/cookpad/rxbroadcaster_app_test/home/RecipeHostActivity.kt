@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_recipe_list.*
 import org.cookpad.rxbroadcaster_app_test.R
+import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.home.bookmarks.BookmarksFragment
 import org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment
 
@@ -18,6 +19,12 @@ class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
 
     val onShowBookmarksSubject = PublishSubject.create<Unit>()
     override val onShowBookmarks = onShowBookmarksSubject.hide()
+
+    val onRecipeUpdatedFromListSubject = PublishSubject.create<Recipe>()
+    val onRecipeUpdatedFromList = onRecipeUpdatedFromListSubject.hide()
+
+    val onRecipeUpdatedFromBookmarksSubject = PublishSubject.create<Recipe>()
+    val onRecipeUpdatedFromBookmarks = onRecipeUpdatedFromBookmarksSubject.hide()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +37,18 @@ class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
         viewPager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
                 return when (position) {
-                    0 -> RecipesFragment()
-                    1 -> BookmarksFragment()
-                    else -> BookmarksFragment()
+                    0 -> RecipesFragment().apply {
+                        this.onRecipeUpdated = this@RecipeHostActivity.onRecipeUpdatedFromBookmarks
+                        this.onRecipeUpdatedSubject = this@RecipeHostActivity.onRecipeUpdatedFromListSubject
+                    }
+                    1 -> BookmarksFragment().apply {
+                        this.onRecipeUpdated = this@RecipeHostActivity.onRecipeUpdatedFromList
+                        this.onRecipeUpdatedSubject = this@RecipeHostActivity.onRecipeUpdatedFromBookmarksSubject
+                    }
+                    else -> BookmarksFragment().apply {
+                        this.onRecipeUpdated = this@RecipeHostActivity.onRecipeUpdatedFromList
+                        this.onRecipeUpdatedSubject = this@RecipeHostActivity.onRecipeUpdatedFromBookmarksSubject
+                    }
                 }
             }
 

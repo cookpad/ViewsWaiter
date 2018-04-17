@@ -3,6 +3,7 @@ package org.cookpad.rxbroadcaster_app_test.home.bookmarks
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import org.cookpad.rxbroadcaster_app_test.data.RecipeRepository
@@ -20,15 +21,31 @@ class BookmarksPresenter(private val view: View,
                     .subscribe { recipe -> goToRecipeScreen(recipe.id) }
                     .addTo(disposables)
 
+            // We should assume that the views have already update themselves from the adapter
             likeClicks
-                    .flatMapCompletable { recipe -> repository.toggleLike(recipe).doOnComplete { showBookmarks() } }
+                    .flatMapCompletable { recipe ->
+                        repository.updateRecipe(recipe).doOnComplete {
+                            // Notify the RecipesFragment of the new bookmarked/unbookmarked recipe
+                            onRecipeUpdatedSubject?.onNext(recipe)
+                        }
+                    }
                     .subscribe()
                     .addTo(disposables)
 
             bookmarkClicks
-                    .flatMapCompletable { recipe -> repository.toggleBookmark(recipe).doOnComplete { showBookmarks() } }
+                    .flatMapCompletable { recipe ->
+                        repository.updateRecipe(recipe).doOnComplete {
+                            // Notify the RecipesFragment of the new bookmarked/unbookmarked recipe
+                            onRecipeUpdatedSubject?.onNext(recipe)
+                        }
+                    }
                     .subscribe()
                     .addTo(disposables)
+
+            onRecipeUpdated?.subscribe {
+                // Update the bookmarks when notified from the RecipesFragment
+                showBookmarks()
+            }
         }
 
         showBookmarks()
@@ -51,6 +68,8 @@ class BookmarksPresenter(private val view: View,
         val detailClicks: PublishSubject<Recipe>
         val likeClicks: PublishSubject<Recipe>
         val bookmarkClicks: PublishSubject<Recipe>
+        var onRecipeUpdatedSubject: PublishSubject<Recipe>?
+        var onRecipeUpdated: Observable<Recipe>?
 
         fun showBookmarks(recipes: List<Recipe>)
         fun goToRecipeScreen(recipeId: String)

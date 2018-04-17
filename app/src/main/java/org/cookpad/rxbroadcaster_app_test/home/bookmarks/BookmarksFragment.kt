@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_recipes.*
 import org.cookpad.rxbroadcaster_app_test.R
@@ -18,6 +19,9 @@ class BookmarksFragment : Fragment(), BookmarksPresenter.View {
     override val likeClicks by lazy { PublishSubject.create<Recipe>() }
 
     private val adapter by lazy { RecipeAdapter(detailClicks, likeClicks, bookmarkClicks) }
+
+    override var onRecipeUpdatedSubject: PublishSubject<Recipe>? = null
+    override var onRecipeUpdated: Observable<Recipe>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater.inflate(R.layout.fragment_bookmarks, container, false) as ViewGroup
