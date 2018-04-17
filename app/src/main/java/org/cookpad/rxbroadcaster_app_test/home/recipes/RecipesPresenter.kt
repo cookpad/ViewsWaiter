@@ -6,6 +6,10 @@ import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import org.cookpad.rxbroadcaster_app_test.Pipelines
+import org.cookpad.rxbroadcaster_app_test.RecipeAction
+import org.cookpad.rxbroadcaster_app_test.RecipeActionBookmark
+import org.cookpad.rxbroadcaster_app_test.RecipeActionLike
 import org.cookpad.rxbroadcaster_app_test.data.RecipeRepository
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.utils.extensions.addTo
@@ -21,28 +25,21 @@ class RecipesPresenter(private val view: View,
                     .subscribe { recipe -> goToRecipeScreen(recipe.id) }
                     .addTo(disposables)
 
+            fun updateRecipe(recipeAction: RecipeAction) = repository.updateRecipe(recipeAction.recipe).doOnComplete {
+                // Notify the BookmarksFragment of the new bookmarked/unbookmarked recipe
+                onRecipeUpdatedSubject?.onNext(recipeAction.recipe)
+                Pipelines.recipeActionPipeline.channel(recipeAction.recipe.id).emit(recipeAction)
+                showRecipes()
+            }
+
             // We should assume that the views have already update themselves from the adapter
             likeClicks
-                    .flatMapCompletable { recipe ->
-                        val updatedRecipe = recipe.copy(liked = !recipe.liked)
-                        repository.updateRecipe(updatedRecipe).doOnComplete {
-                            // Notify the BookmarksFragment of the new bookmarked/unbookmarked recipe
-                            onRecipeUpdatedSubject?.onNext(updatedRecipe)
-                            showRecipes()
-                        }
-                    }
+                    .flatMapCompletable { recipe -> updateRecipe(RecipeActionLike(recipe.copy(liked = !recipe.liked))) }
                     .subscribe()
                     .addTo(disposables)
 
             bookmarkClicks
-                    .flatMapCompletable { recipe ->
-                        val updatedRecipe = recipe.copy(bookmarked = !recipe.liked)
-                        repository.updateRecipe(updatedRecipe).doOnComplete {
-                            // Notify the BookmarksFragment of the new bookmarked/unbookmarked recipe
-                            onRecipeUpdatedSubject?.onNext(updatedRecipe)
-                            showRecipes()
-                        }
-                    }
+                    .flatMapCompletable { recipe -> updateRecipe(RecipeActionBookmark(recipe.copy(bookmarked = !recipe.bookmarked))) }
                     .subscribe()
                     .addTo(disposables)
 
