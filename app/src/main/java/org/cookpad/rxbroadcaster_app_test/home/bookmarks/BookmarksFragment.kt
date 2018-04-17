@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_recipes.*
+import org.cookpad.rxbroadcaster.bindOnBackground
+import org.cookpad.rxbroadcaster_app_test.Pipelines
 import org.cookpad.rxbroadcaster_app_test.R
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.detail.RecipeActivity
@@ -22,6 +24,10 @@ class BookmarksFragment : Fragment(), BookmarksPresenter.View {
 
     override var onRecipeUpdatedSubject: PublishSubject<Recipe>? = null
     override var onRecipeUpdated: Observable<Recipe>? = null
+
+    override val onRecipeActionPipeline by lazy {
+        Pipelines.recipeActionPipeline.stream().bindOnBackground(lifecycle)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater.inflate(R.layout.fragment_bookmarks, container, false) as ViewGroup

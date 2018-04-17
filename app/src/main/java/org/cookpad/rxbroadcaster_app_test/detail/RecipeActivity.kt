@@ -5,9 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_recipe.*
+import org.cookpad.rxbroadcaster.bindOnBackground
+import org.cookpad.rxbroadcaster_app_test.Pipelines
 import org.cookpad.rxbroadcaster_app_test.R
+import org.cookpad.rxbroadcaster_app_test.RecipeAction
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment
 
@@ -25,6 +29,10 @@ class RecipeActivity : AppCompatActivity(), RecipePresenter.View {
 
     override val onRecipeUpdatedFromDetailSubject = PublishSubject.create<Recipe>()
     val onRecipeUpdatedFromDetail = onRecipeUpdatedFromDetailSubject.hide()
+
+    override val onRecipeActionPipeline by lazy {
+        Pipelines.recipeActionPipeline.channel(recipeId).stream().bindOnBackground(lifecycle)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

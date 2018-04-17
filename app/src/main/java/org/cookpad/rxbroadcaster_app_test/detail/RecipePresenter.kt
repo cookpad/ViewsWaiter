@@ -9,6 +9,7 @@ import io.reactivex.subjects.PublishSubject
 import org.cookpad.rxbroadcaster_app_test.Pipelines
 import org.cookpad.rxbroadcaster_app_test.RecipeAction
 import org.cookpad.rxbroadcaster_app_test.RecipeActionBookmark
+import org.cookpad.rxbroadcaster_app_test.RecipeActionLike
 import org.cookpad.rxbroadcaster_app_test.data.RecipeRepository
 import org.cookpad.rxbroadcaster_app_test.data.models.Recipe
 import org.cookpad.rxbroadcaster_app_test.utils.extensions.addTo
@@ -38,7 +39,7 @@ class RecipePresenter(private val view: View,
 
             onRecipeLiked
                     .flatMapSingle { repository.get(recipeId) }
-                    .flatMapCompletable { recipe -> updateRecipe(RecipeActionBookmark(recipe.copy(liked = !recipe.liked))) }
+                    .flatMapCompletable { recipe -> updateRecipe(RecipeActionLike(recipe.copy(liked = !recipe.liked))) }
                     .subscribe()
                     .addTo(disposables)
 
@@ -56,6 +57,18 @@ class RecipePresenter(private val view: View,
                         setLiked(recipe.liked)
                     }
                     .addTo(disposables)
+
+            onRecipeActionPipeline
+                    .subscribe { recipeAction ->
+                        recipeAction.apply {
+                            when (this) {
+                                is RecipeActionLike -> setLiked(recipe.liked)
+                                is RecipeActionBookmark -> setBookmarked(recipe.bookmarked)
+                            }
+                        }
+                        println("detail")
+                    }
+                    .addTo(disposables)
         }
     }
 
@@ -69,6 +82,8 @@ class RecipePresenter(private val view: View,
         val onRecipeBookmarked: Observable<Unit>
         val onRecipeUpdatedFromList: Observable<Recipe>
         val onRecipeUpdatedFromDetailSubject: PublishSubject<Recipe>
+
+        val onRecipeActionPipeline: Observable<RecipeAction>
 
         val recipeId: String
         fun showRecipe(recipe: Recipe)

@@ -42,10 +42,11 @@ class BookmarksPresenter(private val view: View,
                     .subscribe()
                     .addTo(disposables)
 
-            onRecipeUpdated?.subscribe {
-                // Update the bookmarks when notified from the RecipesFragment
-                showBookmarks()
-            }?.addTo(disposables)
+            onRecipeUpdated?.subscribe { showBookmarks() }
+                    ?.addTo(disposables)
+
+            onRecipeActionPipeline.subscribe { showBookmarks(); println("bookmarks") }
+                    .addTo(disposables)
         }
 
         showBookmarks()
@@ -68,8 +69,10 @@ class BookmarksPresenter(private val view: View,
         val detailClicks: PublishSubject<Recipe>
         val likeClicks: PublishSubject<Recipe>
         val bookmarkClicks: PublishSubject<Recipe>
-        var onRecipeUpdatedSubject: PublishSubject<Recipe>?
-        var onRecipeUpdated: Observable<Recipe>?
+        val onRecipeUpdatedSubject: PublishSubject<Recipe>?
+        val onRecipeUpdated: Observable<Recipe>?
+
+        val onRecipeActionPipeline: Observable<RecipeAction>
 
         fun showBookmarks(recipes: List<Recipe>)
         fun goToRecipeScreen(recipeId: String)

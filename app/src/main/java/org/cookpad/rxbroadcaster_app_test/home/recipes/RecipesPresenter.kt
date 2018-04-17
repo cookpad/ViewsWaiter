@@ -43,10 +43,11 @@ class RecipesPresenter(private val view: View,
                     .subscribe()
                     .addTo(disposables)
 
-            onRecipeUpdated?.subscribe {
-                // Update the recipes when notified from the RecipesFragment
-                showRecipes()
-            }?.addTo(disposables)
+            onRecipeUpdated?.subscribe { showRecipes() }
+                    ?.addTo(disposables)
+
+            onRecipeActionPipeline.subscribe { showRecipes(); println("recipes") }
+                    .addTo(disposables)
         }
 
         showRecipes()
@@ -69,8 +70,10 @@ class RecipesPresenter(private val view: View,
         val detailClicks: PublishSubject<Recipe>
         val likeClicks: PublishSubject<Recipe>
         val bookmarkClicks: PublishSubject<Recipe>
-        var onRecipeUpdatedSubject: PublishSubject<Recipe>?
-        var onRecipeUpdated: Observable<Recipe>?
+        val onRecipeUpdatedSubject: PublishSubject<Recipe>?
+        val onRecipeUpdated: Observable<Recipe>?
+
+        val onRecipeActionPipeline: Observable<RecipeAction>
 
         fun showRecipes(recipes: List<Recipe>)
         fun goToRecipeScreen(recipeId: String)
