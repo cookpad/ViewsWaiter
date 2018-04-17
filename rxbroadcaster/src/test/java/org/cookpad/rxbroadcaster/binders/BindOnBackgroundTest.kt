@@ -38,10 +38,6 @@ class BindOnBackgroundTest {
         controller.pause()
         pipelineCount.emit(2)
         assertThat(activityTest.count).isEqualTo(2)
-
-        controller.destroy()
-        pipelineCount.emit(3)
-        assertThat(activityTest.count).isEqualTo(2)
     }
 
     companion object {

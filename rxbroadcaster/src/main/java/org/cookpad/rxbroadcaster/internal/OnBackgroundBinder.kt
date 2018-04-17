@@ -9,8 +9,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.observables.ConnectableObservable
 
 internal class OnBackgroundBinderTransformer<T>(lifecycle: Lifecycle) : ObservableTransformer<T, T>, LifecycleObserver {
-    private var active = true
-    private var dispose: Disposable? = null
+    private var isOnBackground = false
 
     init {
         lifecycle.addObserver(this)
@@ -18,22 +17,14 @@ internal class OnBackgroundBinderTransformer<T>(lifecycle: Lifecycle) : Observab
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
-        active = false
+        isOnBackground = false
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {
-        active = true
+        isOnBackground = true
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
-        dispose?.dispose()
-    }
-
-    override fun apply(upstream: Observable<T>): ConnectableObservable<T> = upstream
-            .filter { active }
-            .publish()
-            .also { stream -> dispose = stream.connect() }
+    override fun apply(upstream: Observable<T>): Observable<T> = upstream.filter { isOnBackground }
 }
 
