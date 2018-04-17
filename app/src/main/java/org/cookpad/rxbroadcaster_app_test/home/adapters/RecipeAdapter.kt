@@ -25,7 +25,7 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {
-            var recipe = recipes[position]
+            val recipe = recipes[position]
 
             tvTitle.text = recipe.name
             tvDescription.text = recipe.description
@@ -33,8 +33,6 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
             ivBookmarkButton.apply {
                 setBookmarked(this, recipe.bookmarked)
                 setOnClickListener {
-                    recipe = recipe.copy(bookmarked = !recipe.bookmarked)
-                    setBookmarked(this, recipe.bookmarked)
                     bookmarkClicks.onNext(recipe)
                 }
             }
@@ -42,13 +40,9 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
             ivLikeButton.apply {
                 setLiked(this, recipe.liked)
                 setOnClickListener {
-                    recipe = recipe.copy(liked = !recipe.liked)
-                    setLiked(this, recipe.liked)
                     likeClicks.onNext(recipe)
                 }
             }
-
-
 
             rlRoot.setOnClickListener { detailClicks.onNext(recipe) }
         }

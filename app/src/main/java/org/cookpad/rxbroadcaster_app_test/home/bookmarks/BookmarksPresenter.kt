@@ -21,12 +21,13 @@ class BookmarksPresenter(private val view: View,
                     .subscribe { recipe -> goToRecipeScreen(recipe.id) }
                     .addTo(disposables)
 
-            // We should assume that the views have already update themselves from the adapter
             likeClicks
                     .flatMapCompletable { recipe ->
-                        repository.updateRecipe(recipe).doOnComplete {
+                        val updatedRecipe = recipe.copy(liked = !recipe.liked)
+                        repository.updateRecipe(updatedRecipe).doOnComplete {
                             // Notify the RecipesFragment of the new bookmarked/unbookmarked recipe
-                            onRecipeUpdatedSubject?.onNext(recipe)
+                            onRecipeUpdatedSubject?.onNext(updatedRecipe)
+                            showBookmarks()
                         }
                     }
                     .subscribe()
@@ -34,9 +35,11 @@ class BookmarksPresenter(private val view: View,
 
             bookmarkClicks
                     .flatMapCompletable { recipe ->
-                        repository.updateRecipe(recipe).doOnComplete {
+                        val updatedRecipe = recipe.copy(bookmarked = !recipe.bookmarked)
+                        repository.updateRecipe(updatedRecipe).doOnComplete {
                             // Notify the RecipesFragment of the new bookmarked/unbookmarked recipe
-                            onRecipeUpdatedSubject?.onNext(recipe)
+                            onRecipeUpdatedSubject?.onNext(updatedRecipe)
+                            showBookmarks()
                         }
                     }
                     .subscribe()
@@ -45,7 +48,7 @@ class BookmarksPresenter(private val view: View,
             onRecipeUpdated?.subscribe {
                 // Update the bookmarks when notified from the RecipesFragment
                 showBookmarks()
-            }
+            }?.addTo(disposables)
         }
 
         showBookmarks()
