@@ -1,28 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/colorAccent"
-        android:textSize="20sp"
-        tools:text="Some title recipe" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/more_recipes" />
-
-    <fragment
-        android:id="@+id/fragmentRecipes"
-        android:name="org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:background="@color/backgroundColor"
+        >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            >
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/chicken"
+                />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:gravity="top"
+                android:orientation="horizontal"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                >
+
+            <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    tools:text="Some title recipe"
+                    />
+
+            <ImageView
+                    android:id="@+id/ivLikeButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/ic_like"
+                    android:tint="@color/textColor"
+                    />
+
+            <ImageView
+                    android:id="@+id/ivBookmarkButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/ic_bookmark"
+                    android:tint="@color/textColor"
+                    />
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:fontFamily="sans-serif"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                tools:text="Some title recipe"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/more_recipes"
+                />
+
+        <fragment
+                android:id="@+id/fragmentRecipes"
+                android:name="org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
