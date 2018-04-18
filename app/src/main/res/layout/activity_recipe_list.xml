@@ -8,7 +8,7 @@
         tools:context=".home.RecipeHostActivity"
         >
 
-    <org.cookpad.rxbroadcaster_app_test.utils.NonSwipeableViewPager
+    <org.cookpad.app_test.utils.NonSwipeableViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"

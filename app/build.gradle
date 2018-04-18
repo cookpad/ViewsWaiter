@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "org.cookpad.rxbroadcaster_app_test"
+        applicationId "org.cookpad.app_test"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
@@ -34,7 +34,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     kapt "android.arch.lifecycle:compiler:1.1.1"
 
-    implementation project(':rxbroadcaster')
+    implementation project(':views-waiter')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

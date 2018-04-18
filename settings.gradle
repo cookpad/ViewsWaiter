@@ -1,1 +1,1 @@
-include ':app', ':rxbroadcaster'
+include ':app', ':views-waiter'

@@ -90,7 +90,7 @@
 
         <fragment
                 android:id="@+id/fragmentRecipes"
-                android:name="org.cookpad.rxbroadcaster_app_test.home.recipes.RecipesFragment"
+                android:name="org.cookpad.app_test.home.recipes.RecipesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
