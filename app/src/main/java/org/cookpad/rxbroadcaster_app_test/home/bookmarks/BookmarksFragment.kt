@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_recipes.*
+import kotlinx.android.synthetic.main.fragment_bookmarks.*
 import org.cookpad.rxbroadcaster.bindOnBackground
 import org.cookpad.rxbroadcaster_app_test.Pipelines
 import org.cookpad.rxbroadcaster_app_test.R
@@ -39,8 +39,8 @@ class BookmarksFragment : Fragment(), BookmarksPresenter.View {
     }
 
     private fun setupRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        recyclerViewBookmarks.layoutManager = LinearLayoutManager(context)
+        recyclerViewBookmarks.adapter = adapter
     }
 
     override fun showBookmarks(recipes: List<Recipe>) {

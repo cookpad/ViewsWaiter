@@ -45,7 +45,7 @@
                     />
 
             <ImageView
-                    android:id="@+id/ivLikeButton"
+                    android:id="@+id/ivDetailLikeButton"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_margin="4dp"
@@ -54,7 +54,7 @@
                     />
 
             <ImageView
-                    android:id="@+id/ivBookmarkButton"
+                    android:id="@+id/ivDetailBookmarkButton"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_margin="4dp"

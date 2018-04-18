@@ -53,19 +53,21 @@ class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
         ivBookmarkButton.apply {
             val drawableBookmark = if (bookmarked) R.drawable.ic_bookmarked else R.drawable.ic_bookmark
             setImageResource(drawableBookmark)
+            tag = if (bookmarked) "bookmarked" else ""
         }
     }
 
     private fun setLiked(ivLikeButton: ImageView, liked: Boolean) {
         ivLikeButton.apply {
-            val (drawable, colorFilter) = if (liked) {
-                R.drawable.ic_liked to ContextCompat.getColor(context, R.color.likedColor)
+            val (drawable, colorFilter, tag) = if (liked) {
+                Triple(R.drawable.ic_liked, ContextCompat.getColor(context, R.color.likedColor), "liked")
             } else {
-                R.drawable.ic_like to ContextCompat.getColor(context, R.color.textColor)
+                Triple(R.drawable.ic_like, ContextCompat.getColor(context, R.color.textColor), "")
             }
 
             setImageResource(drawable)
             setColorFilter(colorFilter)
+            setTag(tag)
         }
     }
 

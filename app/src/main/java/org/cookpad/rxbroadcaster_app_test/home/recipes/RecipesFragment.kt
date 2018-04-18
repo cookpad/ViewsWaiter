@@ -39,8 +39,8 @@ class RecipesFragment : Fragment(), RecipesPresenter.View {
     }
 
     private fun setupRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        recyclerViewRecipes.layoutManager = LinearLayoutManager(context)
+        recyclerViewRecipes.adapter = adapter
     }
 
     override fun showRecipes(recipes: List<Recipe>) {
