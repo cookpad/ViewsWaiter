@@ -81,7 +81,7 @@ You can create types to model actions but it's not necessary, as the pipelines a
 When emitting events it's best to always emit in a channel, that way you can decide how specifically you want to subscribe to them.
 
 ```kotlin
-ikeRecipePipeline.channel(item.id).emit(item)
+likeRecipePipeline.channel(item.id).emit(item)
 ```
 
 # HOW and WHEN to use this library?
