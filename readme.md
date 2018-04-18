@@ -1,83 +1,110 @@
 # WIP
+## ViewsWaiter - Background View Updater
 
-The main purpose of this library is to create a simple way of **communicating with stacked activities/fragments** (not in the foreground) when the stack is too big or complex to use *onActivityResult* without it becomming very messy.
 
-For example, you can use this library when you have a big stack of activities that contain a representation of an item, and you want to update all those representations when you press a **like** button, so when you go back in the stack all the views are updated.
+<img width="100%" src="https://images.unsplash.com/photo-1473106328154-ae21d6ff7836?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=27954dc085047f71aea1e58822eaf374&auto=format&fit=crop&w=1789&h=480&q=80"/>
 
-### Pipelines
-Pipelines represent a specific action or behavior associated with a data structure.
-Share a pipeline for all the views that need to be aware of that action.  
-Try to be specific enough with your pipelines, without creating too many of them.
-Examples of pipelines could be:
+> Whiskey's gone but I ain't leaving. There's got to be a bottle in the back.
+
+### Hey View! Keep up!
+A common question in Android app development is -how do I update stacked views?- You start in an item list, maybe go further in the stack and then you update the state of one of those items... but when you press back the changes are not reflected in your stacked views ☹️
+
+![](docs/images/stacked_diagram.png)
+
+Our goal with this *library* (!?) is to provide a simple solution for this problem, by creating a mininal wrapper around well known RxJava components in order to **communicate with stacked activities/fragments** (stacked means: not in the foreground).
+
+![](docs/images/stacked_diagram_pipelines.png)
+
+---
+#### Disclaimer
+Before diving into the docs, you should know that there are many other ways to tackle the update of background views: you could reload the views based on a common source of truth (fetching from data layer), you could also use the infamous `OnActivityResult` when you only need to notify the previous activity. Other people have resorted to using an Event Bus (everyone tells you why should not use it, but everyone is using it).  
+
+# What you'll find in this library
+## Pipelines
+Pipelines represent a specific action or behavior associated with a data structure:
 
 ```kotlin
-val likeRecipePipeline = RxBroadcaster<Recipe>()
-val sendCommentPipeline = RxBroadcaster<Comment>()
+val likeRecipePipeline = ViewsWaiter<Recipe>()
 ```
 
-A pipeline is too generic if it's responsibilities 
-are not clear (it doesn't represent a single action):
-
-```kotlin
-val recipePipeline = RxBroadcaster<Recipe>()
-```
-
-A pipeline is too specific if you need a lot of them to model 
-the interaction:
-```kotlin
-val likeFirstRecipePipeline = RxBroadcaster<Recipe>()
-val likeSecondRecipePipeline = RxBroadcaster<Recipe>()
-val likeThirdRecipePipeline = RxBroadcaster<Recipe>()
-```
-
-You should define your pipelines globally, as they must be shared amongst all the components that you want to communicate with.
-RxBroadcaster uses RxJava2 internally, so just like with observables, events emitted in a pipeline will only be received when subscribing to that same pipeline.
-Once you subscribe to a pipeline stream, you should handle the unsubscription by yourself to avoid memory leaks.
+You should hold your pipelines globally, as they must be shared amongst all the components that you want to communicate with.
 
 ## Channels
-Pipelines represent an action related with a specific data type (like recipes, send chat messages, etc), but insinde of a specific pipeline you can create channels to get or emmit actions for specific items (like recipe #123,  send chat message to Peter, etc).
-A channel is identified by a string, and can be accessed like this
-```
-val likeRecipePipeline = RxBroadcaster<Recipe>()
+From a pipeline you can create channels to subscribe or emit actions for specific items (i.e. the user liked recipe #123).
+A channel is identified by a string, and can be accessed like this:
+
+```kotlin
+val likeRecipePipeline = ViewsWaiter<Recipe>()
 val channel = likeRecipePipeline.channel("123")
 ```
-Every further actions performed in a channeled pipeline will be performed inside that specific channel.
+Then use the channel in the same way you would use a pipeline (emit/subscribe).
 
 ## Streams
-### List Views
-For lists views, you should subscribe to a stream without specifying a channel, so you get all the events emmited in that pipeline, then you can filter and update a specific item from the list manually.
+The stream you get from a pipeline is a regular RxJava Observable, so you can chain it and use operators on it.
+
+### Only receive events on background views
+In this library we provide the `.bindOnBackground()` RxJava operator, that accepts a **lifecycle** as a parameter and will handle that events are only received when the actrivity is on background.
+This will prevent you to subscribe to events emitted from the same activity.
+
+```kotlin
+likeRecipePipeline.stream()
+	.bindOnBackground(lifecycle)
+	.subscribe { likedItem ->
+    	// here we will only get events emmited from other activities 
+    	// when this activity is in the background
+	}
+```
+
+Unless you have a very good reason to do this, you should **always** use this operator when subscribing to a stream, and handle the update of the current view with regular methods (i.e. calling the view from the presenter).
+
+### Updating lists
+For lists views, you probably want to subscribe to a stream without specifying a channel to listen to all emitted events.
+
 ```kotlin
 likeRecipePipeline.stream().subscribe { likedItem ->
-    itemList.find{ it.id == likedItem.id}.like()
-    // update views and data source
+    // update list if necessary
 }
 ```
 
 ### Detail Views
-For single items (detail views) you can get the stream for a specific channel, that way, you'll only subscribe to events targeted for that specific item.
+For detail views you should get stream for a specific channel, that way you'll only subscribe to events targeted for that specific item.
+
 ```kotlin
-recipeLikePipeline.channel(item.id).stream().subscribe { likedItem ->
-    item.liked = likedItem.liked
+likeRecipePipeline.channel(item.id).stream().subscribe { likedItem ->
     // update view
 }
 ```
 
-### Emitting
-In a pipeline you can only emit object of a specific type, those objects represent events. 
-You can create specific objects to represent behaviors but it's not necessary, as the pipelines already give a representation of that.
+## Emitting
+You can create types to model actions but it's not necessary, as the pipelines already give a good representation.
 
-Emitting a **recipe** in channel `12345` of the pipeline `recipeLikePipeline` represents the event: The recipe with id `12345` has been liked.
+When emitting events it's best to always emit in a channel, that way you can decide how specifically you want to subscribe to them.
 
-For simple events like those, you can also choose to send the minimum required ammount of data you need to update your models/views, for example if you only need to know if a specific recipe has been liked or unliked, you could send a custom object `class RecipeLikeEvent(id: String, liked: Boolean)` then your pipeline will be `val likeRecipePipeline = RxBroadcaster<RecipeLikeEvent>()`
-
-When emitting events, unless you have a very good reason not to, always emit in a channel, that way both lists and detail views will be able to get the stream and update themselves (because when subscribing to a stream without channel you also get the events emmited in channels).
 ```kotlin
-recipeLikePipeline.channel(item.id).emit(item)
+likeRecipePipeline.channel(item.id).emit(item)
 ```
 
-#### Inmutability
+# HOW and WHEN to use this library?
+In this repository we provide a [sample application](/app) where you can see a (simplified) usage of ViewsWaiter, you can take a deeper look at the code, but let's go through the basic use cases.
 
-We strongly advise you to only emmit immutable models (as Kotlin data classes), 
-that way you'll prevent accidentally modifying one item from the history 
-causing unexpected behavior, and you'll be sure that the latest emitted 
-event within a filter is the most updated.
+## Where NOT to use ViewsWaiter
+### 1. To update views/fragments that share the same host
+Sometimes you have views or fragments inside the same host activty, maybe using a ViewPager, maybe with a simple FrameLayout where you inject the fragments.  
+When you change something in one of the fragments you want this change to propagate to the rest of the fragments (if there is a shared representation of the data).  
+This update should be handled by the host activity, NOT with ViewsWaiter. You can use basic PublishSubject/Observables, or declare interfaces in the fragments that the host will consume to notifiy the rest of the fragments when somethin is updated, is up to you. 
+
+Here are two examples in the sample app where we do NOT use ViewsWaiter to update the views.  
+![](docs/images/same_host_1.gif) ![](docs/images/same_host_2.gif)
+
+### 2. Whenever you can use OnActivityResult
+If you feel like you can use `OnActivityResult` for the job, use it.  
+A lot of times you don't need to update all the stack of activities, you just need to get a single result from the current activity, in those cases you should avoid using ViewsWaiter and favor `OnActivityResult`.
+
+### 3. When a stacked activity has been killed by the system
+Whenever a stacked activity is killed by the system, the subscription to the ViewsWaiter pipeline will be destroyed (be aware that the unsubscription should be handled by the client), so the next time the `onCreate` method of this activity/fragment is called you should recreate your view from an updated data source (cache, API, etc).   
+
+## Where to use ViewsWaiter
+### 1. When you want to update stacked views
+If your flow allows the user to stack views that should be updated when an action is performed in the currently visible view, you can use ViewsWaiter to notify those stacked views, make sure to use the `bindOnBackground` RxJava operator provided by this library to make sure that the events are only received by stacked views (and not by the activity that's in the foreground).
+
+![](docs/images/stacked_views.gif)
