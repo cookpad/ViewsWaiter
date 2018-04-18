@@ -5,8 +5,6 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.disposables.Disposable
-import io.reactivex.observables.ConnectableObservable
 
 internal class OnBackgroundBinderTransformer<T>(lifecycle: Lifecycle) : ObservableTransformer<T, T>, LifecycleObserver {
     private var isOnBackground = false
