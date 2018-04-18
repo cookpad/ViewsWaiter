@@ -7,9 +7,13 @@
 > Whiskey's gone but I ain't leaving. There's got to be a bottle in the back.
 
 ### Hey View! Keep up!
-A common question in Android app development is -how do I update stacked views?- You start in an item list, then you click on one of those items, update its state, maybe navigate even deeper and then go back... but the changes are not reflected in your stacked views ☹️
+A common question in Android app development is -how do I update stacked views?- You start in an item list, maybe go further in the stack and then you update the state of one of those items... but when you press back the changes are not reflected in your stacked views ☹️
+
+![](docs/images/stacked_diagram.png)
 
 Our goal with this *library* (!?) is to provide a simple solution for this problem, by creating a mininal wrapper around well known RxJava components in order to **communicate with stacked activities/fragments** (stacked means: not in the foreground).
+
+![](docs/images/stacked_diagram_pipelines.png)
 
 ---
 #### Disclaimer
