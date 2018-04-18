@@ -38,5 +38,17 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.1') {
+        exclude group: 'com.google.code.findbugs'
+    }
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude group: 'com.google.code.findbugs'
+    }
+    androidTestImplementation('com.github.VictorAlbertos:DeviceAnimationTestRule:0.0.2') {
+        exclude group: 'com.android.support.test'
+    }
+    androidTestImplementation 'com.google.truth:truth:0.39'
 }
