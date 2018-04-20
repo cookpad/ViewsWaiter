@@ -16,6 +16,25 @@ Our goal with this *library* (!?) is to provide a simple solution for this probl
 ![](docs/images/stacked_diagram_pipelines.png)
 
 ---
+
+## Setup
+Add to top level *gradle.build* file
+
+```gradle
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+Add to app module *gradle.build* file
+```gradle
+dependencies {
+	compile 'com.github.cookpad:ViewsWaiter:0.0.1'
+}
+```
+
 #### Disclaimer
 Before diving into the docs, you should know that there are many other ways to tackle the update of background views: you could reload the views based on a common source of truth (fetching from data layer), you could also use the infamous `OnActivityResult` when you only need to notify the previous activity. Other people have resorted to using an Event Bus (everyone tells you why should not use it, but everyone is using it).  
 
