@@ -43,8 +43,7 @@ Then use the channel in the same way you would use a pipeline (emit/subscribe).
 The stream you get from a pipeline is a regular RxJava Observable, so you can chain it and use operators on it.
 
 ### Only receive events on background views
-In this library we provide the `.bindOnBackground()` RxJava operator, that accepts a **lifecycle** as a parameter and will handle that events are only received when the actrivity is on background.
-This will prevent you to subscribe to events emitted from the same activity.
+In this library, we expose `Observable<T>.bindOnBackground()` as an extension function which accepts a **lifecycle** as a parameter and will ensure that events are only received when the activity is on background. This will prevent you to subscribe to events emitted from the same activity.
 
 ```kotlin
 likeRecipePipeline.stream()
@@ -55,7 +54,7 @@ likeRecipePipeline.stream()
 	}
 ```
 
-Unless you have a very good reason to do this, you should **always** use this operator when subscribing to a stream, and handle the update of the current view with regular methods (i.e. calling the view from the presenter).
+Unless you have a very good reason, you should **always** use `Observable<T>.bindOnBackground()` when subscribing to a stream, and handle the update of the current view with regular methods (i.e. calling the view from the presenter).
 
 ### Updating lists
 For lists views, you probably want to subscribe to a stream without specifying a channel to listen to all emitted events.
@@ -91,20 +90,21 @@ In this repository we provide a [sample application](/app) where you can see a (
 ### 1. To update views/fragments that share the same host
 Sometimes you have views or fragments inside the same host activty, maybe using a ViewPager, maybe with a simple FrameLayout where you inject the fragments.  
 When you change something in one of the fragments you want this change to propagate to the rest of the fragments (if there is a shared representation of the data).  
-This update should be handled by the host activity, NOT with ViewsWaiter. You can use basic PublishSubject/Observables, or declare interfaces in the fragments that the host will consume to notifiy the rest of the fragments when somethin is updated, is up to you. 
+This update should be handled by the host activity, NOT with ViewsWaiter. You can use basic `PublishSubject`/`Observable`, or declare interfaces in the fragments that the host will consume to notifiy the rest of the fragments when something is updated, is up to you. 
 
-Here are two examples in the sample app where we do NOT use ViewsWaiter to update the views.  
+Here are two examples in the sample app where we do NOT use ViewsWaiter to update the views:
+
 ![](docs/images/same_host_1.gif) ![](docs/images/same_host_2.gif)
 
 ### 2. Whenever you can use OnActivityResult
 If you feel like you can use `OnActivityResult` for the job, use it.  
-A lot of times you don't need to update all the stack of activities, you just need to get a single result from the current activity, in those cases you should avoid using ViewsWaiter and favor `OnActivityResult`.
+Some times you don't need to update all the stack of activities, you just need to get a single result from the current activity, in those cases you should avoid using ViewsWaiter and favor `OnActivityResult`.
 
-### 3. When a stacked activity has been killed by the system
-Whenever a stacked activity is killed by the system, the subscription to the ViewsWaiter pipeline will be destroyed (be aware that the unsubscription should be handled by the client), so the next time the `onCreate` method of this activity/fragment is called you should recreate your view from an updated data source (cache, API, etc).   
+### 3. When a stacked activity has been killed by the system
+Whenever a stacked activity is killed by the system, the subscription to the ViewsWaiter pipeline will be destroyed (be aware that the unsubscription should be handled by the client of this library), so the next time the `onCreate` method of this activity/fragment is called you should recreate your view from an updated data source (cache, API, etc).   
 
 ## Where to use ViewsWaiter
 ### 1. When you want to update stacked views
-If your flow allows the user to stack views that should be updated when an action is performed in the currently visible view, you can use ViewsWaiter to notify those stacked views, make sure to use the `bindOnBackground` RxJava operator provided by this library to make sure that the events are only received by stacked views (and not by the activity that's in the foreground).
+If your flow allows the user to stack views that should be updated when an action is performed in the currently visible view, you can use ViewsWaiter to notify those stacked views, make sure to use the `bindOnBackground` extension function provided by this library to make sure that the events are only received by stacked views (and not by the activity that's in the foreground).
 
 ![](docs/images/stacked_views.gif)
