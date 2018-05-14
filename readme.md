@@ -1,4 +1,3 @@
-# WIP
 ## ViewsWaiter - Background View Updater
 
 
