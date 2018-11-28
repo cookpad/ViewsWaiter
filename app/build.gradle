@@ -7,14 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "org.cookpad.app_test"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -27,21 +27,23 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation "io.reactivex.rxjava2:rxjava:2.1.12"
-    implementation 'com.android.support:design:27.1.1'
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-    kapt "android.arch.lifecycle:compiler:1.1.1"
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 
     implementation project(':views-waiter')
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.1') {
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation "androidx.test.ext:junit:1.0.0"
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0') {
         exclude group: 'com.google.code.findbugs'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+    androidTestCompile('androidx.test.espresso:espresso-contrib:3.1.0') {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
@@ -50,5 +52,5 @@ dependencies {
     androidTestImplementation('com.github.VictorAlbertos:DeviceAnimationTestRule:0.0.2') {
         exclude group: 'com.android.support.test'
     }
-    androidTestImplementation 'com.google.truth:truth:0.39'
+    androidTestImplementation 'com.google.truth:truth:0.40'
 }

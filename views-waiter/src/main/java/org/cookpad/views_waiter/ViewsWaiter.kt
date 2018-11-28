@@ -1,6 +1,6 @@
 package org.cookpad.views_waiter
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.cookpad.views_waiter.internal.BroadcasterMessage

@@ -1,10 +1,10 @@
 package org.cookpad.app_test.home.adapters
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.list_item_recipe.view.*
 import org.cookpad.app_test.R
