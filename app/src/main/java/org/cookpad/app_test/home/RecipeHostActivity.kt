@@ -1,9 +1,9 @@
 package org.cookpad.app_test.home
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_recipe_list.*
 import org.cookpad.app_test.R
@@ -32,8 +32,8 @@ class RecipeHostActivity : AppCompatActivity(), RecipeHostPresenter.View {
     }
 
     override fun setupNavigation() {
-        viewPager.adapter = object : androidx.fragment.app.FragmentPagerAdapter(supportFragmentManager) {
-            override fun getItem(position: Int): androidx.fragment.app.Fragment {
+        viewPager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
                 return when (position) {
                     0 -> RecipesFragment().apply {
                         this.onRecipeUpdated = this@RecipeHostActivity.onRecipeUpdatedFromBookmarks

@@ -64,7 +64,7 @@ class UseCasesTest {
 
     private fun clickOnList(position: Int) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, click()))
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
     }
 
     private fun bookmarkRecipeDetail() {
@@ -111,7 +111,7 @@ class UseCasesTest {
 
     private fun checkLikeStateOnList(position: Int, liked: Boolean) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, object : ViewAction {
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, object : ViewAction {
                     override fun getConstraints() = isEnabled()
                     override fun getDescription() = "Checking like state"
 
@@ -129,7 +129,7 @@ class UseCasesTest {
 
     private fun checkBookmarkStateOnList(position: Int, bookmarked: Boolean) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, object : ViewAction {
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, object : ViewAction {
                     override fun getConstraints() = isEnabled()
                     override fun getDescription() = "Checking bookmark state"
 
