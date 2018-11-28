@@ -1,5 +1,8 @@
-package org.cookpad.rxbroadcaster_app_test
+package org.cookpad.app_test
 
+import android.view.View
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -7,14 +10,10 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import android.widget.ImageView
 import com.google.common.truth.Truth.assertThat
 import io.victoralbertos.device_animation_test_rule.DeviceAnimationTestRule
-import org.cookpad.app_test.R
 import org.cookpad.app_test.home.RecipeHostActivity
 import org.junit.ClassRule
 import org.junit.Rule
