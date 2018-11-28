@@ -1,7 +1,7 @@
 package org.cookpad.app_test.home.adapters
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,16 +13,16 @@ import org.cookpad.app_test.data.models.Recipe
 class RecipeAdapter(val detailClicks: PublishSubject<Recipe>,
                     val likeClicks: PublishSubject<Recipe>,
                     val bookmarkClicks: PublishSubject<Recipe>) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
     private var recipes = emptyList<Recipe>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item_recipe, parent, false)
             .run {
-                object : RecyclerView.ViewHolder(this) {}
+                object : androidx.recyclerview.widget.RecyclerView.ViewHolder(this) {}
             }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {
             val recipe = recipes[position]
 

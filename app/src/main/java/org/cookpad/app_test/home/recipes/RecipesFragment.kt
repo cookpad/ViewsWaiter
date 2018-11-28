@@ -1,8 +1,8 @@
 package org.cookpad.app_test.home.recipes
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.reactivex.Observable
@@ -15,7 +15,7 @@ import org.cookpad.app_test.detail.RecipeActivity
 import org.cookpad.app_test.home.adapters.RecipeAdapter
 import org.cookpad.views_waiter.bindOnBackground
 
-class RecipesFragment : Fragment(), RecipesPresenter.View {
+class RecipesFragment : androidx.fragment.app.Fragment(), RecipesPresenter.View {
     override val detailClicks by lazy { PublishSubject.create<Recipe>() }
     override val bookmarkClicks by lazy { PublishSubject.create<Recipe>() }
     override val likeClicks by lazy { PublishSubject.create<Recipe>() }
@@ -39,7 +39,7 @@ class RecipesFragment : Fragment(), RecipesPresenter.View {
     }
 
     private fun setupRecyclerView() {
-        recyclerViewRecipes.layoutManager = LinearLayoutManager(context)
+        recyclerViewRecipes.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerViewRecipes.adapter = adapter
     }
 

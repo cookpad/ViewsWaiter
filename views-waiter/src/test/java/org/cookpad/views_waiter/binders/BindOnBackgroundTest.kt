@@ -1,7 +1,7 @@
 package org.cookpad.views_waiter.binders
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.common.truth.Truth.assertThat
 import org.cookpad.views_waiter.BuildConfig
 import org.cookpad.views_waiter.R

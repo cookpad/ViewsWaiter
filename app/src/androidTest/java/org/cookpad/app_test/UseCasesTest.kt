@@ -1,15 +1,15 @@
 package org.cookpad.rxbroadcaster_app_test
 
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.UiController
-import android.support.test.espresso.ViewAction
-import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.google.common.truth.Truth.assertThat
@@ -64,7 +64,7 @@ class UseCasesTest {
 
     private fun clickOnList(position: Int) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
+                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, click()))
     }
 
     private fun bookmarkRecipeDetail() {
@@ -111,7 +111,7 @@ class UseCasesTest {
 
     private fun checkLikeStateOnList(position: Int, liked: Boolean) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, object : ViewAction {
+                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, object : ViewAction {
                     override fun getConstraints() = isEnabled()
                     override fun getDescription() = "Checking like state"
 
@@ -129,7 +129,7 @@ class UseCasesTest {
 
     private fun checkBookmarkStateOnList(position: Int, bookmarked: Boolean) {
         onView(withId(R.id.recyclerViewRecipes))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, object : ViewAction {
+                .perform(actionOnItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(position, object : ViewAction {
                     override fun getConstraints() = isEnabled()
                     override fun getDescription() = "Checking bookmark state"
 
