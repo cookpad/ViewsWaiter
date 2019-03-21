@@ -3,7 +3,6 @@ package org.cookpad.views_waiter.binders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.truth.Truth.assertThat
-import org.cookpad.views_waiter.BuildConfig
 import org.cookpad.views_waiter.R
 import org.cookpad.views_waiter.ViewsWaiter
 import org.cookpad.views_waiter.bindOnBackground
@@ -11,11 +10,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = [21])
 class BindOnBackgroundTest {
 
     @Test

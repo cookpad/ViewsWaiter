@@ -28,18 +28,18 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation "io.reactivex.rxjava2:rxjava:2.1.12"
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.5"
+    implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 
     implementation project(':views-waiter')
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
-    androidTestImplementation "androidx.test.ext:junit:1.0.0"
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation "androidx.test.ext:junit:1.1.0"
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0') {
         exclude group: 'com.google.code.findbugs'
     }
@@ -52,5 +52,5 @@ dependencies {
     androidTestImplementation('com.github.VictorAlbertos:DeviceAnimationTestRule:0.0.2') {
         exclude group: 'com.android.support.test'
     }
-    androidTestImplementation 'com.google.truth:truth:0.40'
+    androidTestImplementation 'com.google.truth:truth:0.42'
 }
