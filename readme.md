@@ -1,6 +1,7 @@
-## ViewsWaiter - Background View Updater
-
-
+# This repository is no longer mantained.
+At Cookpad we are using Flow now for these use cases, so we aren't planning to support any longer RxJava-based solutions. 
+ 
+## Deprecated - ViewsWaiter - Background View Updater
 <img width="100%" src="https://images.unsplash.com/photo-1473106328154-ae21d6ff7836?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=27954dc085047f71aea1e58822eaf374&auto=format&fit=crop&w=1789&h=480&q=80"/>
 
 > Whiskey's gone but I ain't leaving. There's got to be a bottle in the back.
